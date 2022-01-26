@@ -380,6 +380,7 @@ bool VerifyToastExpiresOnReboot()
 
     bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier()
 {
+    //RemoveWithIdentiferAsync();
     return false;
 }
 

@@ -372,5 +372,5 @@ namespace Test::ToastNotifications
         {
             RunTestUnpackaged(L"VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", testWaitTime());
         };
-    }
+    };
 }
