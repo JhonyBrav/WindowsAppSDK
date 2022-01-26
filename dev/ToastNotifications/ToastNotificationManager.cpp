@@ -117,9 +117,9 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
     }
     winrt::Microsoft::Windows::ToastNotifications::ToastNotificationSetting ToastNotificationManager::Setting()
     {
-        std::wstring appId { RetrieveAppId() };
+        //std::wstring appId { RetrieveAppId() };
         DWORD toastNotificationSetting{ 0 };
-        ToastNotifications_QuerySettings(appId.c_str(), &toastNotificationSetting);
+        //ToastNotifications_QuerySettings(appId.c_str(), &toastNotificationSetting);
 
         return static_cast<winrt::Microsoft::Windows::ToastNotifications::ToastNotificationSetting>(toastNotificationSetting);
     }
