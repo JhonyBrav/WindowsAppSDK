@@ -324,8 +324,18 @@ namespace Test::ToastNotifications
             RunTestUnpackaged(L"VerifyToastExpiresOnReboot", testWaitTime());
         }
 
+        TEST_METHOD(VerifyShowToast)
+        {
+            RunTest(L"VerifyShowToast", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyShowToast_Unpackaged)
+        {
+            RunTestUnpackaged(L"VerifyShowToast_Unpackaged", testWaitTime());
+        }
+
 #if 0
-            winrt::Windows::Foundation::IAsyncAction RemoveWithIdentiferAsync(uint32_t toastIdentifier);
+        winrt::Windows::Foundation::IAsyncAction RemoveWithIdentiferAsync(uint32_t toastIdentifier);
         winrt::Windows::Foundation::IAsyncAction RemoveWithTagAsync(hstring tag);
         winrt::Windows::Foundation::IAsyncAction RemoveWithTagGroupAsync(hstring tag, hstring group);
         winrt::Windows::Foundation::IAsyncAction RemoveGroupAsync(hstring group);
@@ -371,6 +381,6 @@ namespace Test::ToastNotifications
         TEST_METHOD(VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged)
         {
             RunTestUnpackaged(L"VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", testWaitTime());
-        };
+        }
     };
 }

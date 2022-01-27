@@ -378,7 +378,38 @@ bool VerifyToastExpiresOnReboot()
     return true;
 }
 
-    bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier()
+bool VerifyShowToast()
+{
+    // Registration happens in main()
+    winrt::ToastNotification toast{ GetToastNotification() };
+
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+    toastNotificationManager.ShowToast(toast);
+
+    return true;
+}
+
+bool VerifyShowToast_Unpackaged()
+{
+    winrt::ToastAssets assets(L"ToastNotificationApp", winrt::Uri{ LR"(C:\Windows\System32\WindowsSecurityIcon.png)" });
+    auto activationInfo = winrt::ToastActivationInfo::CreateFromToastAssets(assets);
+
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+    toastNotificationManager.RegisterActivator(activationInfo);
+
+    auto scope_exit = wil::scope_exit(
+        [&] {
+            toastNotificationManager.UnregisterActivator();
+        });
+
+    winrt::ToastNotification toast{ GetToastNotification() };
+
+    toastNotificationManager.ShowToast(toast);
+
+    return true;
+}
+
+bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier()
 {
     //RemoveWithIdentiferAsync();
     return false;
@@ -456,6 +487,8 @@ std::map<std::string, bool(*)()> const& GetSwitchMapping()
         { "VerifyToastPriority", &VerifyToastPriority },
         { "VerifyToastSuppressDisplay", &VerifyToastSuppressDisplay },
         { "VerifyToastExpiresOnReboot", &VerifyToastExpiresOnReboot },
+        { "VerifyShowToast", &VerifyShowToast },
+        { "VerifyShowToast_Unpackaged", &VerifyShowToast_Unpackaged },
         { "VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", &VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier },
         { "VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged", &VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged },
         { "VerifyFailedRemoveWithTagAsyncUsingEmptyTag", &VerifyFailedRemoveWithTagAsyncUsingEmptyTag },
