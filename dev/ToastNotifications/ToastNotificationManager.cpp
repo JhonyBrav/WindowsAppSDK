@@ -10,6 +10,7 @@
 #include "ToastNotificationUtility.h"
 #include <frameworkudk/pushnotifications.h>
 #include <frameworkudk/toastnotifications.h>
+
 #include <FrameworkUdk/toastnotificationsrt.h>
 #include "NotificationProperties.h"
 #include <NotificationTransientProperties.h>
