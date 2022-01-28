@@ -450,6 +450,50 @@ bool VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged()
     return false;
 }
 
+bool VerifyFailedGetAllAsync()
+{
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+
+    try
+    {
+        auto result = toastNotificationManager.GetAllAsync().get();
+    }
+    catch (...)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool VerifyFailedGetAllAsync_Unpackaged()
+{
+    return false;
+}
+
+bool VerifyGetAllAsync()
+{
+    winrt::ToastNotification toast{ GetToastNotification() };
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+
+    toastNotificationManager.ShowToast(toast);
+
+    auto result = toastNotificationManager.GetAllAsync().get();
+
+    auto size = result.Size();
+    if (size != 1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool VerifyGetAllAsync_Unpackaged()
+{
+    return false;
+}
+
 std::string unitTestNameFromLaunchArguments(const winrt::ILaunchActivatedEventArgs& launchArgs)
 {
     std::string unitTestName = to_string(launchArgs.Arguments());
@@ -497,6 +541,10 @@ std::map<std::string, bool(*)()> const& GetSwitchMapping()
         { "VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged", &VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged },
         { "VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup", &VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup },
         { "VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", &VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged },
+        { "VerifyFailedGetAllAsync", &VerifyFailedGetAllAsync },
+        { "VerifyFailedGetAllAsync_Unpackaged", &VerifyFailedGetAllAsync_Unpackaged },
+        { "VerifyGetAllAsync", &VerifyGetAllAsync },
+        { "VerifyGetAllAsync_Unpackaged", &VerifyGetAllAsync_Unpackaged },
     };
     return switchMapping;
 }

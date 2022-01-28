@@ -382,5 +382,24 @@ namespace Test::ToastNotifications
         {
             RunTestUnpackaged(L"VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", testWaitTime());
         }
+
+        TEST_METHOD(VerifyFailedGetAllAsync)
+        {
+            RunTest(L"VerifyFailedGetAllAsync", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyFailedGetAllAsync_Unpackaged)
+        {
+            RunTestUnpackaged(L"VerifyFailedGetAllAsync_Unpackaged", testWaitTime());
+        }
+        TEST_METHOD(VerifyGetAllAsync)
+        {
+            RunTest(L"VerifyGetAllAsync", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyGetAllAsync_Unpackaged)
+        {
+            RunTestUnpackaged(L"VerifyGetAllAsync_Unpackaged", testWaitTime());
+        }
     };
 }
