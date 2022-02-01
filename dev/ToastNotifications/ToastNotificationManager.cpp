@@ -127,6 +127,8 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
 
         DWORD notificationId = 0;
         THROW_IF_FAILED(ToastNotifications_PostToast(toastAppId.c_str(), notificationProperties.get(), notificationTransientProperties.get(), &notificationId));
+
+        THROW_HR_IF(E_UNEXPECTED, notificationId == 0);
         toast.ToastId(notificationId);
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Microsoft::Windows::ToastNotifications::ToastProgressResult> ToastNotificationManager::UpdateToastProgressDataAsync(winrt::Microsoft::Windows::ToastNotifications::ToastProgressData /* data */, hstring /* tag */, hstring /* group */)
