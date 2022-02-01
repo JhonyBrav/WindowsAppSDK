@@ -171,7 +171,12 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
     }
     winrt::Windows::Foundation::IAsyncAction ToastNotificationManager::RemoveAllAsync()
     {
-        throw hresult_not_implemented();
+        co_await winrt::resume_background();
+
+        std::wstring appId{ RetrieveToastAppId() };
+        auto result{ ToastNotifications_RemoveAllToastsForApp(appId.c_str()) };
+
+        co_return;
     }
     void copyProperties()
     {
@@ -179,6 +184,7 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
     }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification>> ToastNotificationManager::GetAllAsync()
     {
+        co_await winrt::resume_background();
         // STDAPI ToastNotifications_GetHistory(
         //    _In_ PCWSTR appIdentifier,
         //    _COM_Outptr_ ABI::Windows::Foundation::Collections::IVector<ABI::Microsoft::Internal::ToastNotifications::INotificationProperties*>** notificationProperties) noexcept;
