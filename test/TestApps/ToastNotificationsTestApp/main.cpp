@@ -488,7 +488,7 @@ bool VerifyGetAllAsync()
 
     auto actual = result.GetAt(0);
     auto payload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    //printf("ELx - payload: %ws\n", payload.c_str());
+    printf("ELx - payload: %ws\n", payload.c_str());
 
     if (wcscmp(L"<toast>intrepidToast</toast>", payload.c_str()) != 0)
     {
