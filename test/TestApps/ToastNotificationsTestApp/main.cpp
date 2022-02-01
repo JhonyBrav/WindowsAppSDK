@@ -429,17 +429,7 @@ bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier()
     return false;
 }
 
-bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged()
-{
-    return false;
-}
-
 bool VerifyFailedRemoveWithTagAsyncUsingEmptyTag()
-{
-    return false;
-}
-
-bool VerifyFailedRemoveWithTagAsyncUsingEmptyTag_Unpackaged()
 {
     return false;
 }
@@ -449,17 +439,7 @@ bool VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup()
     return false;
 }
 
-bool VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged()
-{
-    return false;
-}
-
 bool VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup()
-{
-    return false;
-}
-
-bool VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged()
 {
     return false;
 }
@@ -477,11 +457,6 @@ bool VerifyFailedGetAllAsync()
         return true;
     }
 
-    return false;
-}
-
-bool VerifyFailedGetAllAsync_Unpackaged()
-{
     return false;
 }
 
@@ -545,11 +520,6 @@ bool VerifyGetAllAsync3()
     return true;
 }
 
-bool VerifyGetAllAsync_Unpackaged()
-{
-    return false;
-}
-
 std::string unitTestNameFromLaunchArguments(const winrt::ILaunchActivatedEventArgs& launchArgs)
 {
     std::string unitTestName = to_string(launchArgs.Arguments());
@@ -560,11 +530,6 @@ std::string unitTestNameFromLaunchArguments(const winrt::ILaunchActivatedEventAr
     }
 
     return unitTestName;
-}
-
-bool VerifyGetAllAsync3_Unpackaged()
-{
-    return false;
 }
 
 std::map<std::string, bool(*)()> const& GetSwitchMapping()
@@ -595,19 +560,12 @@ std::map<std::string, bool(*)()> const& GetSwitchMapping()
         { "VerifyShowToast", &VerifyShowToast },
         { "VerifyShowToast_Unpackaged", &VerifyShowToast_Unpackaged },
         { "VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", &VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier },
-        { "VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged", &VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged },
         { "VerifyFailedRemoveWithTagAsyncUsingEmptyTag", &VerifyFailedRemoveWithTagAsyncUsingEmptyTag },
-        { "VerifyFailedRemoveWithTagAsyncUsingEmptyTag_Unpackaged", &VerifyFailedRemoveWithTagAsyncUsingEmptyTag_Unpackaged },
         { "VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup", &VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup },
-        { "VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged", &VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged },
         { "VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup", &VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup },
-        { "VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", &VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged },
         { "VerifyFailedGetAllAsync", &VerifyFailedGetAllAsync },
-        { "VerifyFailedGetAllAsync_Unpackaged", &VerifyFailedGetAllAsync_Unpackaged },
         { "VerifyGetAllAsync", &VerifyGetAllAsync },
-        { "VerifyGetAllAsync_Unpackaged", &VerifyGetAllAsync_Unpackaged },
         { "VerifyGetAllAsync3", &VerifyGetAllAsync3 },
-        { "VerifyGetAllAsync3_Unpackaged", &VerifyGetAllAsync3_Unpackaged },
     };
     return switchMapping;
 }

@@ -355,7 +355,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", testWaitTime());
         }
 
         TEST_METHOD(VerifyFailedRemoveWithTagAsyncUsingEmptyTag)
@@ -365,7 +365,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyFailedRemoveWithTagAsyncUsingEmptyTag_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyFailedRemoveWithTagAsyncUsingEmptyTag_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyFailedRemoveWithTagAsyncUsingEmptyTag", testWaitTime());
         }
 
         TEST_METHOD(VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup)
@@ -375,7 +375,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup", testWaitTime());
         }
 
         TEST_METHOD(VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup)
@@ -385,7 +385,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup", testWaitTime());
         }
 
         TEST_METHOD(VerifyFailedGetAllAsync)
@@ -395,7 +395,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyFailedGetAllAsync_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyFailedGetAllAsync_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyFailedGetAllAsync", testWaitTime());
         }
         TEST_METHOD(VerifyGetAllAsync)
         {
@@ -404,7 +404,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyGetAllAsync_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyGetAllAsync_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyGetAllAsync", testWaitTime());
         }
 
         TEST_METHOD(VerifyGetAllAsync3)
@@ -414,7 +414,7 @@ namespace Test::ToastNotifications
 
         TEST_METHOD(VerifyGetAllAsync3_Unpackaged)
         {
-            RunTestUnpackaged(L"VerifyGetAllAsync3_Unpackaged", testWaitTime());
+            RunTestUnpackaged(L"VerifyGetAllAsync3", testWaitTime());
         }
     };
 }
