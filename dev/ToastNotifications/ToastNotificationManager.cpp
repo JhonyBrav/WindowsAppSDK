@@ -212,8 +212,7 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
             hstring payload2(reinterpret_cast<wchar_t*>(payload.get()));
             winrt::hstring xmlPayload{ L"<toast>intrepidToast</toast>" };
             printf("ELx - xmlPayload: %ws\n", xmlPayload.c_str());
-            char a[100];
-            scanf_s(a);
+            fflush(stdout);
 
             winrt::Windows::Data::Xml::Dom::XmlDocument xmlDocument{};
             xmlDocument.LoadXml(xmlPayload);

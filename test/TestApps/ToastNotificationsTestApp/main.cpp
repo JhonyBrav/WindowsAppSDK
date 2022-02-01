@@ -512,6 +512,39 @@ bool VerifyGetAllAsync()
     return true;
 }
 
+bool VerifyGetAllAsync3()
+{
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+
+    winrt::ToastNotification toast1{ GetToastNotification() };
+    toastNotificationManager.ShowToast(toast1);
+
+    winrt::ToastNotification toast2{ GetToastNotification() };
+    toastNotificationManager.ShowToast(toast2);
+
+    winrt::ToastNotification toast3{ GetToastNotification() };
+    toastNotificationManager.ShowToast(toast3);
+
+    auto result = toastNotificationManager.GetAllAsync().get();
+
+    auto size = result.Size();
+    if (size != 3)
+    {
+        return false;
+    }
+
+    auto actual = result.GetAt(0);
+    auto payload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
+    printf("ELx - payload: %ws\n", payload.c_str());
+
+    if (wcscmp(L"<toast>intrepidToast</toast>", payload.c_str()) != 0)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool VerifyGetAllAsync_Unpackaged()
 {
     return false;
@@ -527,6 +560,11 @@ std::string unitTestNameFromLaunchArguments(const winrt::ILaunchActivatedEventAr
     }
 
     return unitTestName;
+}
+
+bool VerifyGetAllAsync3_Unpackaged()
+{
+    return false;
 }
 
 std::map<std::string, bool(*)()> const& GetSwitchMapping()
@@ -568,6 +606,8 @@ std::map<std::string, bool(*)()> const& GetSwitchMapping()
         { "VerifyFailedGetAllAsync_Unpackaged", &VerifyFailedGetAllAsync_Unpackaged },
         { "VerifyGetAllAsync", &VerifyGetAllAsync },
         { "VerifyGetAllAsync_Unpackaged", &VerifyGetAllAsync_Unpackaged },
+        { "VerifyGetAllAsync3", &VerifyGetAllAsync3 },
+        { "VerifyGetAllAsync3_Unpackaged", &VerifyGetAllAsync3_Unpackaged },
     };
     return switchMapping;
 }
