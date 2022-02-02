@@ -147,12 +147,6 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
 
         return static_cast<winrt::Microsoft::Windows::ToastNotifications::ToastNotificationSetting>(toastNotificationSetting);
     }
-#if 0
-    winrt::Microsoft::Windows::ToastNotifications::ToastNotificationHistory ToastNotificationManager::History()
-    {
-        throw hresult_not_implemented();
-    }
-#endif
     winrt::Windows::Foundation::IAsyncAction ToastNotificationManager::RemoveWithIdentiferAsync(uint32_t /*toastIdentifier*/)
     {
         throw hresult_not_implemented();
@@ -209,9 +203,7 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification>> ToastNotificationManager::GetAllAsync()
     {
         co_await winrt::resume_background();
-        // STDAPI ToastNotifications_GetHistory(
-        //    _In_ PCWSTR appIdentifier,
-        //    _COM_Outptr_ ABI::Windows::Foundation::Collections::IVector<ABI::Microsoft::Internal::ToastNotifications::INotificationProperties*>** notificationProperties) noexcept;
+
         std::wstring appId{ RetrieveToastAppId() };
         ABI::Windows::Foundation::Collections::IVector<ABI::Microsoft::Internal::ToastNotifications::INotificationProperties*>* notificationProperties;
         auto status = ToastNotifications_GetHistory(appId.c_str(), &notificationProperties);
@@ -222,10 +214,6 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
         THROW_HR_IF(E_NOT_SET, notificationProperties->get_Size(&count) !=  0);
         
         THROW_HR_IF(E_NOT_SET, count == 0);
-        //Microsoft::WRL::ComPtr<Internal::AgileVector<INotificationProperties*>> notificationVector;
-        //THROW_IF_FAILED(Internal::AgileVector<INotificationProperties*>::Make(&notificationVector));
-        //winrt::Windows::Foundation::Collections::IVector < winrt::Microsoft::Windows::ToastNotifications::ToastNotification> result;
-        //return result;
 
         winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification> result { winrt::single_threaded_vector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification>() };
 

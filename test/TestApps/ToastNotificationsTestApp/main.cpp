@@ -40,6 +40,30 @@ winrt::ToastNotification GetToastNotification()
     return GetToastNotification(L"intrepidToast");
 }
 
+bool VerifyToastWasPosted(UINT32 expectedToastId)
+{
+    auto result1 = winrt::ToastNotificationManager::Default().GetAllAsync();
+    if (result1.wait_for(std::chrono::seconds(300)) != winrt::Windows::Foundation::AsyncStatus::Completed)
+    {
+        result1.Cancel();
+        return false;
+    }
+
+    auto result2 = result1.get();
+
+    bool found = false;
+    for (auto elem : result2)
+    {
+        if (elem.ToastId() == expectedToastId)
+        {
+            found = true;
+            break;
+        }
+    }
+
+    return found;
+}
+
 bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, const winrt::ToastNotification& actual)
 {
     if (expected.Tag() != actual.Tag())
@@ -56,13 +80,19 @@ bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, co
     {
         return false;
     }
-
+#if 0
+    if (expected.Payload() != actual.Payload())
+    {
+        return false;
+    }
+#endif
     auto expectedPayload = expected.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    printf("ELx - expectedPayload: %ws\n", expectedPayload.c_str());
     auto actualPayload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    printf("ELx - actualPayload: %ws\n", actualPayload.c_str());
-
     if (wcscmp(expectedPayload.c_str(), actualPayload.c_str()) != 0)
+    {
+        return false;
+    }
+    if (expectedPayload != actualPayload)
     {
         return false;
     }
@@ -451,9 +481,7 @@ bool VerifyShowToast()
         return false;
     }
 
-    // TODO: Verify the toast was posted by calling History APIs.
-
-    return true;
+    return VerifyToastWasPosted(toast.ToastId());
 }
 
 bool VerifyShowToast_Unpackaged()
@@ -478,7 +506,7 @@ bool VerifyShowToast_Unpackaged()
         return false;
     }
 
-    // TODO: Verify the toast was posted by calling History APIs.
+    return VerifyToastWasPosted(toast.ToastId());
 
     return true;
 }
@@ -592,7 +620,7 @@ bool VerifyGetAllAsync()
     winrt::ToastNotification toast{ GetToastNotification(L"MyOwnToast")};
     toast.Tag(L"aDifferentTag");
     toast.Group(L"aDifferentGroup");
-    //toast.ToastId(42); //Setting a value here, seems to fail
+    //toast.ToastId(42); //This value is overwritten by showToast and can't be set by the user.
     winrt::DateTime expirationTime{ winrt::clock::now() };
     expirationTime += winrt::TimeSpan{ std::chrono::seconds(10) };
     toast.ExpirationTime(expirationTime);
