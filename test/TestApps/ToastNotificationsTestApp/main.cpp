@@ -40,21 +40,21 @@ winrt::ToastNotification GetToastNotification()
     return GetToastNotification(L"intrepidToast");
 }
 
-bool VerifyToastWasPosted(UINT32 expectedToastId)
+bool VerifyToastIsActive(UINT32 expectedToastId)
 {
-    auto result1 = winrt::ToastNotificationManager::Default().GetAllAsync();
-    if (result1.wait_for(std::chrono::seconds(300)) != winrt::Windows::Foundation::AsyncStatus::Completed)
+    auto retrieveNotificationsAsync{ winrt::ToastNotificationManager::Default().GetAllAsync() };
+    if (retrieveNotificationsAsync.wait_for(std::chrono::seconds(300)) != winrt::Windows::Foundation::AsyncStatus::Completed)
     {
-        result1.Cancel();
+        retrieveNotificationsAsync.Cancel();
         return false;
     }
 
-    auto result2 = result1.get();
+    auto notifications = retrieveNotificationsAsync.get();
 
-    bool found = false;
-    for (auto elem : result2)
+    bool found{ false };
+    for (auto notification : notifications)
     {
-        if (elem.ToastId() == expectedToastId)
+        if (notification.ToastId() == expectedToastId)
         {
             found = true;
             break;
@@ -80,23 +80,15 @@ bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, co
     {
         return false;
     }
-#if 0
-    if (expected.Payload() != actual.Payload())
-    {
-        return false;
-    }
-#endif
+
     auto expectedPayload = expected.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
     auto actualPayload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    if (wcscmp(expectedPayload.c_str(), actualPayload.c_str()) != 0)
-    {
-        return false;
-    }
     if (expectedPayload != actualPayload)
     {
         return false;
     }
 #if 0
+    // ELx - TODO implement this.
     if (VerifyProgressData(expected.ProgressData(), actual.ProgressData()))
     {
         return false;
@@ -481,7 +473,7 @@ bool VerifyShowToast()
         return false;
     }
 
-    return VerifyToastWasPosted(toast.ToastId());
+    return VerifyToastIsActive(toast.ToastId());
 }
 
 bool VerifyShowToast_Unpackaged()
@@ -506,15 +498,47 @@ bool VerifyShowToast_Unpackaged()
         return false;
     }
 
-    return VerifyToastWasPosted(toast.ToastId());
+    return VerifyToastIsActive(toast.ToastId());
 
     return true;
 }
 
 bool VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier()
 {
-    //RemoveWithIdentiferAsync();
     return false;
+}
+
+bool VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier()
+{
+    return false;
+}
+
+bool VerifyFailedRemoveWithIdentiferAsync()
+{
+    auto toastNotificationManager = winrt::ToastNotificationManager::Default();
+
+    winrt::ToastNotification toast1{ GetToastNotification(L"Toast1") };
+    toastNotificationManager.ShowToast(toast1);
+
+    winrt::ToastNotification toast2{ GetToastNotification(L"Toast2") };
+    toastNotificationManager.ShowToast(toast2);
+
+    winrt::ToastNotification toast3{ GetToastNotification(L"Toast3") };
+    toastNotificationManager.ShowToast(toast3);
+
+    if (!VerifyToastIsActive(toast1.ToastId()) || !VerifyToastIsActive(toast2.ToastId()) || !VerifyToastIsActive(toast3.ToastId()))
+    {
+        return false;
+    }
+
+    toastNotificationManager.RemoveWithIdentiferAsync(toast2.ToastId());
+
+    if (!VerifyToastIsActive(toast1.ToastId()) || !VerifyToastIsActive(toast3.ToastId()))
+    {
+        return false;
+    }
+
+    return !VerifyToastIsActive(toast2.ToastId());
 }
 
 bool VerifyFailedRemoveWithTagAsyncUsingEmptyTag()
@@ -729,6 +753,8 @@ std::map<std::string, bool(*)()> const& GetSwitchMapping()
         { "VerifyShowToast", &VerifyShowToast },
         { "VerifyShowToast_Unpackaged", &VerifyShowToast_Unpackaged },
         { "VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", &VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier },
+        { "VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier", &VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier },
+        { "VerifyFailedRemoveWithIdentiferAsync", &VerifyFailedRemoveWithIdentiferAsync },
         { "VerifyFailedRemoveWithTagAsyncUsingEmptyTag", &VerifyFailedRemoveWithTagAsyncUsingEmptyTag },
         { "VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup", &VerifyFailedRemoveWithTagGroupAsyncUsingEmptyTagAndGroup },
         { "VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup", &VerifyFailedRemoveWithGroupAsyncUsingEmptyGroup },

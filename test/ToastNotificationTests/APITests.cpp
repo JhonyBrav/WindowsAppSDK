@@ -28,9 +28,9 @@ namespace Test::ToastNotifications
             TEST_CLASS_PROPERTY(L"Description", L"Windows App SDK Toast Notifications test")
             TEST_CLASS_PROPERTY(L"ThreadingModel", L"MTA")
             TEST_CLASS_PROPERTY(L"RunAs:Class", L"RestrictedUser")
-            END_TEST_CLASS()
+        END_TEST_CLASS()
 
-            static const int testWaitTime()
+        static const int testWaitTime()
         {
             return 3000;
         }
@@ -339,15 +339,6 @@ namespace Test::ToastNotifications
             RunTestUnpackaged(L"VerifyShowToast_Unpackaged", testWaitTime());
         }
 
-#if 0
-        winrt::Windows::Foundation::IAsyncAction RemoveWithIdentiferAsync(uint32_t toastIdentifier);
-        winrt::Windows::Foundation::IAsyncAction RemoveWithTagAsync(hstring tag);
-        winrt::Windows::Foundation::IAsyncAction RemoveWithTagGroupAsync(hstring tag, hstring group);
-        winrt::Windows::Foundation::IAsyncAction RemoveGroupAsync(hstring group);
-        winrt::Windows::Foundation::IAsyncAction RemoveAllAsync();
-        winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification>> GetAllAsync();
-#endif
-
         TEST_METHOD(VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier)
         {
             RunTest(L"VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", testWaitTime());
@@ -356,6 +347,26 @@ namespace Test::ToastNotifications
         TEST_METHOD(VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier_Unpackaged)
         {
             RunTestUnpackaged(L"VerifyFailedRemoveWithIdentiferAsyncUsingZeroedToastIdentifier", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier)
+        {
+            RunTest(L"VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier_Unpackaged)
+        {
+            RunTestUnpackaged(L"VerifyFailedRemoveWithIdentiferAsyncUsingNonActiveToastIdentifier", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyFailedRemoveWithIdentiferAsync)
+        {
+            RunTest(L"VerifyFailedRemoveWithIdentiferAsync", testWaitTime());
+        }
+
+        TEST_METHOD(VerifyFailedRemoveWithIdentiferAsync_Unpackaged)
+        {
+            RunTestUnpackaged(L"VerifyFailedRemoveWithIdentiferAsync", testWaitTime());
         }
 
         TEST_METHOD(VerifyFailedRemoveWithTagAsyncUsingEmptyTag)
