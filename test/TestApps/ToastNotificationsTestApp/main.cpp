@@ -25,14 +25,74 @@ bool UnregisterBackgroundActivationTest()
     return true;
 }
 
-winrt::ToastNotification GetToastNotification()
+winrt::ToastNotification GetToastNotification(winrt::hstring message)
 {
-    winrt::hstring xmlPayload{ L"<toast>intrepidToast</toast>" };
+    winrt::hstring xmlPayload{ L"<toast>" + message + L"</toast>" };
 
     winrt::XmlDocument xmlDocument{};
     xmlDocument.LoadXml(xmlPayload);
 
     return winrt::ToastNotification(xmlDocument);
+}
+
+winrt::ToastNotification GetToastNotification()
+{
+    return GetToastNotification(L"intrepidToast");
+}
+
+bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, const winrt::ToastNotification& actual)
+{
+    if (expected.Tag() != actual.Tag())
+    {
+        return false;
+    }
+
+    if (expected.Group() != actual.Group())
+    {
+        return false;
+    }
+
+    if (expected.ToastId() != actual.ToastId())
+    {
+        return false;
+    }
+
+    auto expectedPayload = expected.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
+    printf("ELx - expectedPayload: %ws\n", expectedPayload.c_str());
+    auto actualPayload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
+    printf("ELx - actualPayload: %ws\n", actualPayload.c_str());
+
+    if (wcscmp(expectedPayload.c_str(), actualPayload.c_str()) != 0)
+    {
+        return false;
+    }
+#if 0
+    if (VerifyProgressData(expected.ProgressData(), actual.ProgressData()))
+    {
+        return false;
+    }
+#endif
+    if (expected.ExpirationTime() != actual.ExpirationTime())
+    {
+        return false;
+    }
+
+    if (expected.ExpiresOnReboot() != actual.ExpiresOnReboot())
+    {
+        return false;
+    }
+
+    if (expected.Priority() != actual.Priority())
+    {
+        return false;
+    }
+
+    if (expected.SuppressDisplay() != actual.SuppressDisplay())
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool VerifyFailedRegisterActivatorUsingNullClsid()
@@ -529,7 +589,15 @@ bool VerifyFailedGetAllAsync()
 
 bool VerifyGetAllAsync()
 {
-    winrt::ToastNotification toast{ GetToastNotification() };
+    winrt::ToastNotification toast{ GetToastNotification(L"MyOwnToast")};
+    toast.Tag(L"aDifferentTag");
+    toast.Group(L"aDifferentGroup");
+    //toast.ToastId(42); //Setting a value here, seems to fail
+    winrt::DateTime expirationTime{ winrt::clock::now() };
+    expirationTime += winrt::TimeSpan{ std::chrono::seconds(10) };
+    toast.ExpirationTime(expirationTime);
+    toast.ExpiresOnReboot(false); //Setting this to true fails, not sure why
+
     auto toastNotificationManager = winrt::ToastNotificationManager::Default();
 
     toastNotificationManager.ShowToast(toast);
@@ -548,17 +616,9 @@ bool VerifyGetAllAsync()
     {
         return false;
     }
-#if 0
-    auto actual = result2.GetAt(0);
-    auto payload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    printf("ELx - payload: %ws\n", payload.c_str());
 
-    if (wcscmp(L"<toast>intrepidToast</toast>", payload.c_str()) != 0)
-    {
-        return false;
-    }
-#endif
-    return true;
+    auto actual = result2.GetAt(0);
+    return VerifyToastNotificationIsValid(toast, actual);
 }
 
 bool VerifyGetAllAsync3()

@@ -182,6 +182,30 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
     {
 
     }
+    wil::unique_cotaskmem_string ConvertUtf8StringToWideString(unsigned long payloadLength, _In_ byte* utf8String)
+    {
+        int size = MultiByteToWideChar(
+            CP_UTF8,
+            0,
+            reinterpret_cast<PCSTR>(utf8String),
+            payloadLength,
+            nullptr,
+            0);
+        THROW_LAST_ERROR_IF(size == 0);
+
+        wil::unique_cotaskmem_string wideString = wil::make_unique_string<wil::unique_cotaskmem_string>(nullptr, size);
+
+        size = MultiByteToWideChar(
+            CP_UTF8,
+            0,
+            reinterpret_cast<PCSTR>(utf8String),
+            payloadLength,
+            wideString.get(),
+            size);
+        THROW_LAST_ERROR_IF(size == 0);
+
+        return wideString;
+    }
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::Windows::ToastNotifications::ToastNotification>> ToastNotificationManager::GetAllAsync()
     {
         co_await winrt::resume_background();
@@ -214,14 +238,14 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
             wil::unique_cotaskmem_array_ptr<byte> payload;
             properties->get_Payload(&payloadSize, &payload);
             printf("ELx - xmlPayload: %s\n", payload.get());
-
-            hstring payload2(reinterpret_cast<wchar_t*>(payload.get()));
+            auto wide = ConvertUtf8StringToWideString(payloadSize, payload.get());
+            hstring payload2(wide.get());
             winrt::hstring xmlPayload{ L"<toast>intrepidToast</toast>" };
             printf("ELx - xmlPayload: %ws\n", xmlPayload.c_str());
             fflush(stdout);
 
             winrt::Windows::Data::Xml::Dom::XmlDocument xmlDocument{};
-            xmlDocument.LoadXml(xmlPayload);
+            xmlDocument.LoadXml(payload2);
 
             winrt::Microsoft::Windows::ToastNotifications::ToastNotification notification(xmlDocument);
 
@@ -258,12 +282,15 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
 #endif
             // Gets or sets the time after which a toast notification should not be displayed.
             //Windows.Foundation.DateTime ExpirationTime;
-#if 0
             unsigned long long expiry;
             properties->get_Expiry(&expiry);
-            winrt::Windows::Foundation::DateTime converted(expiry);
-            notification.ExpirationTime();
-#endif
+            FILETIME expiryFileTime;
+            expiryFileTime.dwHighDateTime = expiry >> 32;
+            expiryFileTime.dwLowDateTime = expiry;
+            //*expiry = static_cast<ULONGLONG>(m_expiry.dwHighDateTime) << 32 | static_cast<ULONGLONG>(m_expiry.dwLowDateTime);
+            //winrt::Windows::Foundation::DateTime converted(expiry);
+            auto expiryClock = winrt::clock::from_file_time(expiryFileTime);
+            notification.ExpirationTime(expiryClock);
 
             // Indicates whether the toast will remain in the Action Center after a reboot.
             //Boolean ExpiresOnReboot;
