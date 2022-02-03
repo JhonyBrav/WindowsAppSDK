@@ -39,6 +39,10 @@ winrt::ToastNotification GetToastNotification()
 {
     return GetToastNotification(L"intrepidToast");
 }
+
+bool VerifyToastIsActive(unsigned expectedToastId)
+{
+#if 0 //ELx bad merge
     if (retrieveNotificationsAsync.wait_for(std::chrono::seconds(300)) != winrt::Windows::Foundation::AsyncStatus::Completed)
     {
         retrieveNotificationsAsync.Cancel();
@@ -58,6 +62,8 @@ winrt::ToastNotification GetToastNotification()
     }
 
     return found;
+#endif
+    return false;
 }
 
 bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, const winrt::ToastNotification& actual)
@@ -118,8 +124,10 @@ bool VerifyFailedRegisterActivatorUsingNullClsid()
     try
     {
         auto activationInfo = winrt::ToastActivationInfo::CreateFromActivationGuid(winrt::guid(GUID_NULL));
+
         winrt::ToastNotificationManager::Default().RegisterActivator(activationInfo);
     }
+    catch (...)
     {
         return winrt::to_hresult() == E_INVALIDARG;
     }
