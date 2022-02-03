@@ -40,9 +40,9 @@ winrt::ToastNotification GetToastNotification()
     return GetToastNotification(L"intrepidToast");
 }
 
-bool VerifyToastIsActive(unsigned expectedToastId)
+bool VerifyToastIsActive(UINT32 expectedToastId)
 {
-#if 0 //ELx bad merge
+    auto retrieveNotificationsAsync{ winrt::ToastNotificationManager::Default().GetAllAsync() };
     if (retrieveNotificationsAsync.wait_for(std::chrono::seconds(300)) != winrt::Windows::Foundation::AsyncStatus::Completed)
     {
         retrieveNotificationsAsync.Cancel();
@@ -62,8 +62,6 @@ bool VerifyToastIsActive(unsigned expectedToastId)
     }
 
     return found;
-#endif
-    return false;
 }
 
 bool VerifyToastNotificationIsValid(const winrt::ToastNotification& expected, const winrt::ToastNotification& actual)
@@ -705,7 +703,6 @@ bool VerifyGetAllAsync3()
 
     auto actual = result2.GetAt(0);
     auto payload = actual.Payload().GetElementsByTagName(L"toast").GetAt(0).GetXml();
-    printf("ELx - payload: %ws\n", payload.c_str());
 
     if (wcscmp(L"<toast>intrepidToast</toast>", payload.c_str()) != 0)
     {

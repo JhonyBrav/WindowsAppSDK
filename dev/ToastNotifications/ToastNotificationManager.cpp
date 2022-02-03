@@ -10,6 +10,7 @@
 #include "ToastNotificationUtility.h"
 #include <frameworkudk/pushnotifications.h>
 #include <frameworkudk/toastnotifications.h>
+
 #include <FrameworkUdk/toastnotificationsrt.h>
 #include "NotificationProperties.h"
 #include <NotificationTransientProperties.h>
@@ -228,12 +229,10 @@ namespace winrt::Microsoft::Windows::ToastNotifications::implementation
             unsigned int payloadSize;
             wil::unique_cotaskmem_array_ptr<byte> payload;
             properties->get_Payload(&payloadSize, &payload);
-            printf("ELx - xmlPayload: %s\n", payload.get());
+
             auto wide = ConvertUtf8StringToWideString(payloadSize, payload.get());
             hstring payload2(wide.get());
             winrt::hstring xmlPayload{ L"<toast>intrepidToast</toast>" };
-            printf("ELx - xmlPayload: %ws\n", xmlPayload.c_str());
-            fflush(stdout);
 
             winrt::Windows::Data::Xml::Dom::XmlDocument xmlDocument{};
             xmlDocument.LoadXml(payload2);
