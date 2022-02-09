@@ -22,7 +22,7 @@ parameters:
     default: 'ProjectReunionInternal'
 
 steps:
-  - checkout: git://ProjectReunion/ProjectReunionInternal
+  - checkout: git://ProjectReunion/ProjectReunionInternal@user/kythant/FixIntegration
 
   - task: AzureKeyVault@1
     inputs:
