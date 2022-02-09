@@ -66,6 +66,7 @@ steps:
         -Checkpoint "none"
         -Platform "x86,x64,arm64"
         -Configuration "release,debug"
+        -TransportPackages "all"
         -YamlStep "all"
         -PipelineBuild
 
