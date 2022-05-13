@@ -21,31 +21,19 @@ using namespace winrt::Microsoft::Windows::PushNotifications;
 
 void BaseTestSuite::ClassSetup()
 {
-    ::Test::Bootstrap::SetupPackages();
-}
-
-void BaseTestSuite::ClassCleanup()
-{
-    ::Test::Bootstrap::CleanupPackages();
-}
-
-void BaseTestSuite::MethodSetup()
-{
-    ::Test::Bootstrap::SetupBootstrap();
-
+    ::Test::Bootstrap::Setup();
     bool isSelfContained{};
     VERIFY_SUCCEEDED(TestData::TryGetValue(L"SelfContained", isSelfContained));
 
     if (!isSelfContained)
     {
         ::WindowsAppRuntime::VersionInfo::TestInitialize(::Test::Bootstrap::TP::WindowsAppRuntimeFramework::c_PackageFamilyName);
-        VERIFY_IS_FALSE(::WindowsAppRuntime::SelfContained::IsSelfContained());
     }
-    else
-    {
-        ::WindowsAppRuntime::VersionInfo::TestInitialize(L"I_don't_exist_package!");
-        VERIFY_IS_TRUE(::WindowsAppRuntime::SelfContained::IsSelfContained());
-    }
+}
+
+void BaseTestSuite::ClassCleanup()
+{
+    ::Test::Bootstrap::Cleanup();
 }
 
 void BaseTestSuite::MethodCleanup()
@@ -55,9 +43,6 @@ void BaseTestSuite::MethodCleanup()
         PushNotificationManager::Default().UnregisterAll();
         m_unregisteredFully = true;
     }
-
-    ::WindowsAppRuntime::VersionInfo::TestShutdown();
-    ::Test::Bootstrap::CleanupBootstrap();
 }
 
 HRESULT BaseTestSuite::ChannelRequestHelper(IAsyncOperationWithProgress<PushNotificationCreateChannelResult, PushNotificationCreateChannelStatus> const& channelOperation)
